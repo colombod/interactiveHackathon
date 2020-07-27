@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{B41A54CE-9E66-4673-9D90-0458302BBE00}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InteractiveExtensions", "InteractiveExtensions", "{2AC6FFCE-B638-43AB-BE7F-99A2D53AE076}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{312DF8F5-2401-4382-BB95-9BE3D37BC95F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarcodeScanner", "BarcodeScanner\BarcodeScanner.csproj", "{2D5F494E-FE7F-4DCC-93D4-5C72A8EBFDF3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FB361203-0A26-4FC2-960A-628F306DEB48}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarcodeScanner.Tests", "BarcodeScanner.Tests\BarcodeScanner.Tests.csproj", "{B918CE96-F8B8-428F-854A-2E6CEC67E4A5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BarcodeScanner.InteractiveExtension", "BarcodeScanner.InteractiveExtension\BarcodeScanner.InteractiveExtension.csproj", "{E5F5B93F-DCE4-4FCA-9CD2-A7F11E80924D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarcodeScanner.nuget", "BarcodeScanner.nuget\BarcodeScanner.nuget.csproj", "{C62D8068-1519-4539-A2A1-BCF1C30A0DA7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D5F494E-FE7F-4DCC-93D4-5C72A8EBFDF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D5F494E-FE7F-4DCC-93D4-5C72A8EBFDF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D5F494E-FE7F-4DCC-93D4-5C72A8EBFDF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D5F494E-FE7F-4DCC-93D4-5C72A8EBFDF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B918CE96-F8B8-428F-854A-2E6CEC67E4A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B918CE96-F8B8-428F-854A-2E6CEC67E4A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B918CE96-F8B8-428F-854A-2E6CEC67E4A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B918CE96-F8B8-428F-854A-2E6CEC67E4A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5F5B93F-DCE4-4FCA-9CD2-A7F11E80924D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5F5B93F-DCE4-4FCA-9CD2-A7F11E80924D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5F5B93F-DCE4-4FCA-9CD2-A7F11E80924D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5F5B93F-DCE4-4FCA-9CD2-A7F11E80924D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C62D8068-1519-4539-A2A1-BCF1C30A0DA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C62D8068-1519-4539-A2A1-BCF1C30A0DA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C62D8068-1519-4539-A2A1-BCF1C30A0DA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C62D8068-1519-4539-A2A1-BCF1C30A0DA7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2D5F494E-FE7F-4DCC-93D4-5C72A8EBFDF3} = {B41A54CE-9E66-4673-9D90-0458302BBE00}
+		{B918CE96-F8B8-428F-854A-2E6CEC67E4A5} = {FB361203-0A26-4FC2-960A-628F306DEB48}
+		{E5F5B93F-DCE4-4FCA-9CD2-A7F11E80924D} = {2AC6FFCE-B638-43AB-BE7F-99A2D53AE076}
+		{C62D8068-1519-4539-A2A1-BCF1C30A0DA7} = {312DF8F5-2401-4382-BB95-9BE3D37BC95F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {571FC845-AF64-4C00-BA78-31A022905BD4}
+	EndGlobalSection
+EndGlobal

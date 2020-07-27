@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <PackageVersion>0.0.1</PackageVersion>
+    <PackageId>Hackathon2020.BarcodeScanner</PackageId>
+    <IsPackable>true</IsPackable>
+    <PackageDescription>Hackathon2020 module for barcode scanning.</PackageDescription>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BarcodeScanner.InteractiveExtension\BarcodeScanner.InteractiveExtension.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\BarcodeScanner\BarcodeScanner.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="piTop.Camera" Version="1.0.60" />
+    <PackageReference Include="ZXing.Net" Version="0.16.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../BarcodeScanner/bin/$(Configuration)/$(TargetFramework)/BarcodeScanner.dll" Pack="true" PackagePath="lib/$(TargetFramework)" />
+    <None Include="../BarcodeScanner.InteractiveExtension/bin/$(Configuration)/$(TargetFramework)/BarcodeScanner.InteractiveExtension.dll" Pack="true" PackagePath="interactive-extensions/dotnet" />
+  </ItemGroup>
+
+</Project>
