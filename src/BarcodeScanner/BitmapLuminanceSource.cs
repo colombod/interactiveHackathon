@@ -1,4 +1,4 @@
-﻿//
+﻿// this code is a copy from https://github.com/micjahn/ZXing.Net/blob/a81e732fc294cade3dc617c2ba9b943d2f3fb3b6/Source/Bindings/ZXing.Eto.Forms/BitmapLuminanceSource.cs
 
 using System;
 using System.Drawing;
@@ -8,10 +8,11 @@ using System.Runtime.InteropServices;
 using ZXing;
 
 namespace BarcodeScanner
-{/// <summary>
- /// class which represents the luminance values for a bitmap object
- /// </summary>
-    public class BitmapLuminanceSource : BaseLuminanceSource
+{
+    /// <summary>
+    /// class which represents the luminance values for a bitmap object
+    /// </summary>
+    internal class BitmapLuminanceSource : BaseLuminanceSource
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BitmapLuminanceSource"/> class.

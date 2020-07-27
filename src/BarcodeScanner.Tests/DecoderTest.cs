@@ -14,6 +14,7 @@ namespace BarcodeScanner.Tests
             var image = ImageHelper.LoadImage("code_000.jpg");
             var result = image.Decode();
             result.Text.Should().Be("712345678911");
+            
         }
     }
 }
