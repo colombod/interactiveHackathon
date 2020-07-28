@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="piTop.Camera" Version="1.0.65" />
+    <PackageReference Include="piTop.Camera" Version="1.0.70" />
     <PackageReference Include="ZXing.Net" Version="0.16.5" />
   </ItemGroup>
 
