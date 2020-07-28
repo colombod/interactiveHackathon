@@ -21,6 +21,19 @@ namespace BarcodeScanner
             return result;
         }
 
+        public static Result Decode(this SixLabors.ImageSharp.Image source)
+        {
+
+            var reader = new BarcodeReader
+            {
+                AutoRotate = true,
+                TryInverted = true,
+                Options = new DecodingOptions { TryHarder = true }
+            };
+            var result = reader.Decode(new ImageLuminanceSource(source));
+            return result;
+        }
+
         public static Result Decode(this Mat source)
         {
             var reader = new BarcodeReader
