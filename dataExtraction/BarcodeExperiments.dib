@@ -1,170 +1,51 @@
-#!csharp
+#!markdown
 
-public class BarcodeResponse
-{
-    public Product[] products {get;set;}
-}
+Build and pack project
 
-public class Store 
-{
-    public string store_name{get;set;}// "OnBuy.com",
-    public string store_price{get;set;}// "14.93",
-    public string product_url{get;set;}// "https://www.onbuy.com/gb/universal-adhesives/2-pcs-unibond-1-one-for-all-universal-bond-sealant-white-adhesive-cartridge-suitable-for-wood-brick-ceramic-concrete-tile-stone-metal-glass-etc~c6400~p14377048/?exta=cjunct&stat%",
-    public string currency_code{get;set;}// "GBP",
-    public string currency_symbol{get;set;}// "£"
-}
+#!powershell
 
-public class Product
-{
-    public string barcode_number{get; set;}//": "712345678911",
-    public string barcode_type{get; set;}//": "UPC",
-    public string barcode_formats{get; set;}//": "UPC 712345678911, EAN 0712345678911",
-    public string mpn{get; set;}//": "",
-    public string model{get; set;}//": "",
-    public string asin{get; set;}//": "",
-    public string product_name{get; set;}//": "2 Pcs Unibond 1 One for All Universal Bond Sealant White Adhesive Cartridge  Suitable for Wood, Brick, Ceramic, Concrete, Tile, Stone, Metal, Glass Et",
-    public string title{get; set;}//": "",
-    public string category{get; set;}//": "Hardware > Building Consumables > Hardware Glue & Adhesives",
-    public string manufacturer{get; set;}//": "",
-    public string brand{get; set;}//": "Unibond",
-    public string label{get; set;}//": "",
-    public string author{get; set;}//": "",
-    public string publisher{get; set;}//": "",
-    public string artist{get; set;}//": "",
-    public string actor{get; set;}//": "",
-    public string director{get; set;}//": "",
-    public string studio{get; set;}//": "",
-    public string genre{get; set;}//": "",
-    public string audience_rating{get; set;}//": "",
-    public string ingredients{get; set;}//": "",
-    public string nutrition_facts{get; set;}//": "",
-    public string color{get; set;}//": "",
-    public string format{get; set;}//": "",
-    public string package_quantity{get; set;}//": "",
-    public string size{get; set;}//": "",
-    public string length{get; set;}//": "",
-    public string width{get; set;}//": "",
-    public string height{get; set;}//": "",
-    public string weight{get; set;}//": "",
-    public string release_date{get; set;}//": "",
-    public string description{get; set;}//": "2 PCS UNIBOND 1 ONE FOR ALL UNIVERSAL BOND SEALANT WHITE ADHESIVE CARTRIDGE    SUITABLE FOR WOOD, BRICK, CERAMIC, CONCRETE, TILE, STONE, METAL,.",
-    public string[] features{get; set;}//": [],
-    public string[] images{get; set;}//": [    
-    public Store[] stores{get;set;}// [
-    public string[] reviews{get;set;}// []
-}
+dotnet build ../src
+dotnet pack /p:packageversion=2.2.1 ../src
 
 #!markdown
 
-Make a secrets.txt file in the same directory as this code and place the secrets for BarcodeApi and Spoonacular Api 
+Add BarcodeScanner.nuget package source and install extension nuget.
+
+#!csharp
+
+#i "\full\path\to\interactiveHackathon\src\BarcodeScanner.nuget\bin\Debug\"
+#r nuget:Hackathon2020.BarcodeScanner
+
+#!markdown
+
+Make a secrets.txt file in the same directory as this noteobok.
 The first line contains secret for barcode api and second line for spoonacular
 
 #!csharp
 
-var secrets = System.IO.File.ReadLines("secrets.txt").ToArray();
+var secrets = System.IO.File.ReadLines("secrets.txt").Select(s => s.Trim()).ToArray();
 secrets
 
-#!markdown
+#!csharp
 
-Installing the libraries to .Net Interactive Notebooks
+using BarcodeScanner.BarcodeLookup;
+using BarcodeScanner.Spoonacular;
 
 #!csharp
 
-#r nuget:newtonsoft.json
-
-#!markdown
-
-Importing libraries
+var barcodeLookupClient = new BarcodeLookupClient(secrets[0]);
+var barcodeLookupResult = await barcodeLookupClient.GetProductAsync("712345678911");
 
 #!csharp
 
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.Net.Http;
-using System.IO;
-
-HttpClient client = new HttpClient();
-
-#!markdown
-
-Function for Getting product from barcode using api.barcodelookup
-An eg of barcode id - 712345678911
+barcodeLookupResult.products[0]
 
 #!csharp
 
-async Task<BarcodeResponse> getProduct(string barcode)
-{    
-    var url = $"https://api.barcodelookup.com/v2/products?barcode={barcode}&formatted=y&key={secrets[0]}";
-    HttpResponseMessage response = await client.GetAsync(url);
-    string responseBody = await response.Content.ReadAsStringAsync();
-    return JsonConvert.DeserializeObject<BarcodeResponse>(responseBody);
-}
-
-#!markdown
-
-Function for Getting Ingredient Information using Spoonacular API
-See excel file for list of igredients and respective ids
-- Will be using this to determine the shelf life of the ingredients
+using BarcodeScanner.Spoonacular;
+var spoonClient = new SpoonacularClient(secrets[1]);
+var spoonResult = await spoonClient.GetIngredientInfoAsync(Ingredients.DuckFat);
 
 #!csharp
 
-async Task<string> getIngredientInfoAsync(string id)
-{
-    var ingredientInformation  = await client.GetStringAsync($"https://api.spoonacular.com/food/ingredients/{id}/information?amount=1&apiKey={secrets[1]}");
-    return ingredientInformation;
-}
-
-#!markdown
-
-Get Milk info
-
-#!csharp
-
-var ingredientInformation  = await getIngredientInfoAsync("1077");
-
-#!markdown
-
-Information for Perishablity of items
-Item    No of days of life:
-
-Get info from user when they bought this item
-
-#!csharp
-
-int getPerishibilityInDays(string aisleName)=>
-    aisleName switch
-    {
-        "Baking"=> 365  ,
-        "Health Foods"=>  60 ,
-        "Spices and Seasonings"=> 365  ,
-        "Pasta and Rice"=> 365  ,
-        "Bakery/Bread"=>  7 ,
-        "Refrigerated"=> 21  ,
-        "Canned and Jarred"=> 365  ,
-        "Frozen"=>  180 ,
-        "Nut butters, Jams, and Honey"=>  180 ,
-        "Oil, Vinegar, Salad Dressing"=> 90  ,
-        "Condiments"=> 180  ,
-        "Savory Snacks"=>  90 ,
-        "Milk, Eggs, Other Dairy"=> 21  ,
-        "Ethnic Foods"=> 21  ,
-        "Tea and Coffee"=> 180  ,
-        "Meat"=>  7 ,
-        "Gourmet"=>  30 ,
-        "Sweet Snacks"=> 365  ,
-        "Gluten Free"=>  60 ,
-        "Alcoholic Beverages"=> 800  ,
-        "Cereal"=> 180  ,
-        "Nuts"=>  180 ,
-        "Beverages"=> 365  ,
-        "Produce"=>  7 ,
-        "Not in Grocery Store/Homemade"=> 7  ,
-        "Seafood"=>  5 ,
-        "Cheese"=>  21 ,
-        "Dried Fruits"=> 90  ,
-        "Online"=>  365 ,
-        "Grilling Supplies"=> 365  ,
-        "Bread"=>  7 ,
-        _ => 2
-
-    };
+img[src:spoonResult.ImageMediumUrl]
