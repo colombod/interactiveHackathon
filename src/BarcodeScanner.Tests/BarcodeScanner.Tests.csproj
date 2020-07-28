@@ -5,11 +5,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\apples.png" />
+    <None Remove="Images\bananas.png" />
     <None Remove="Images\code_000.jpg" />
+    <None Remove="Images\code_001.jpg" />
+    <None Remove="Images\ghirardelli.png" />
+    <None Remove="Images\oranges.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Images\apples.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images\bananas.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Images\code_000.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images\code_001.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images\ghirardelli.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Images\oranges.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
