@@ -61,8 +61,8 @@ namespace BarcodeScanner.Spoonacular
                         Category = classifyResponse.Category,
                         Probability = classifyResponse.Probability
                     },
-                    CreationDate = DateTime.UtcNow.ToString("s"),
-                    ExpirationDate = ""
+                    CreationDate = DateTime.UtcNow,
+                    ExpirationDate = null
                 };
 
                 File.WriteAllText(jsonFilePath, JsonConvert.SerializeObject(foodData));

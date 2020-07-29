@@ -10,8 +10,9 @@ Install and load nuget packages and add usings:
 
 #i "/home/pi/Desktop/interactiveHackathon/src/BarcodeScanner.nuget/bin/Debug/"
 #r "nuget:Hackathon2020.BarcodeScanner"
-#r "nuget:piTop,1.0.115"
-#r "nuget:piTop.FoundationKit,1.0.115"
+#r "nuget:piTop"
+#r "nuget:piTop.FoundationKit"
+
 using System.IO;
 using BarcodeScanner;
 using BarcodeScanner.Spoonacular;
@@ -77,65 +78,51 @@ void OnThinking()
     });
 }
 
-#!csharp
+#!markdown
 
-public class ExpirationWizardStep : IWizardStep
-{
-    private DateTime _expirationDate = DateTime.Now;
-    private Display _display;
-    private Font _font;
+Now, we build our wizard, which will show prompts on the pi-top's built-in screen.
 
-    public void Confirm()
-    {
-        
-    }
+Since we want to get the expiration date from the user, we show the date and allow them to use the up/down buttons to increment.
 
-    public void Down()
-    {
-        _expirationDate = _expirationDate.AddDays(-1);
-        RenderDateTime();
-    }
-
-    public void Initialize(Display display, Font font)
-    {
-        _display = display;
-        _font = font;
-        display.Clear();
-        RenderDateTime();
-    }
-
-    public void Up()
-    {
-        _expirationDate = _expirationDate.AddDays(1);
-        RenderDateTime();
-    }
-
-    private void RenderDateTime()
-    {
-        var text = $"Expiration:\n{_expirationDate.Date.ToShortDateString()}";
-
-        _display.Draw((context) => {
-            context.Clear(Color.Black);
-            var rect = TextMeasurer.Measure(text, new RendererOptions(_font));
-            var x = (_display.Width - rect.Width) / 2;
-            var y = (_display.Height + rect.Height) / 2;
-            context.DrawText(text, _font, Color.Aqua, new PointF(x, y));
-        });
-    }
-}
+Once the user hits confirm, that value is saved to the json file.
 
 #!csharp
 
-display(module.Display);
-var wizard = new Wizard(module, new []
+var dateTime = DateTime.UtcNow.Date;
+
+string NewPrompt() => dateTime.ToShortDateString(); //$"When does this expire?\n{dateTime.ToShortDateString()}";
+module.Display.Clear();
+var wizard = new Wizard<FileInfo>(module, new []
 {
-    Wizard.CreateStep(
-        initialPrompt: "Diego was here",
-        confirm: () => {},
-        up: () => "went up",
-        down: () => "went down"
+    Wizard<FileInfo>.CreateStep(
+        initialPrompt: dateTime.ToShortDateString(), //$"When does this expire?\n{dateTime.ToShortDateString()}",
+        confirm: (FileInfo info) => {
+            var foodData = JsonConvert.DeserializeObject<FoodData>(File.ReadAllText(info.FullName));
+            foodData.ExpirationDate = dateTime;
+            File.WriteAllText(info.FullName, JsonConvert.SerializeObject(foodData));
+        },
+        up: () => {
+            dateTime = dateTime.AddDays(1);
+            return NewPrompt();
+        },
+        down: () => {
+            dateTime = dateTime.AddDays(-1);
+            return NewPrompt();
+        }
     )
 });
+
+#!markdown
+
+To see what's on the screen, simply run:
+
+#!csharp
+
+module.Display
+
+#!markdown
+
+This is a simple helper function that is used to write the data we get back from Spoonacular and the creation date.
 
 #!csharp
 
@@ -154,13 +141,21 @@ FileInfo WriteFoodDataFile(string imageFile, ClassifyResponse classifyResponse)
             Category = classifyResponse.Category,
             Probability = classifyResponse.Probability
         },
-        CreationDate = DateTime.UtcNow.ToString("s"),
-        ExpirationDate = ""
+        CreationDate = DateTime.UtcNow,
+        ExpirationDate = null
     };
 
     File.WriteAllText(jsonFilePath, JsonConvert.SerializeObject(foodData));
     return new FileInfo(jsonFilePath);
 }
+
+#!markdown
+
+Our file system watcher. The sequence goes like this:
+
+1. A user takes a picture and puts that picture in the data folder
+2. The picture is classified and the data from that is stored in a JSON file along with when the file was created
+3. The JSON file creation triggers the start of the Wizard which prompts for the expiration
 
 #!csharp
 
@@ -188,14 +183,14 @@ async void OnChangedAsync(object source, FileSystemEventArgs e)
         case ".json":
             if (wizard.CurrentState == WizardState.NotStarted)
             {
-                wizard.Start(e.FullPath);
+                wizard.Start(new FileInfo(e.FullPath));
             }
             break;
     }
 }
 
 var watcher = new FileSystemWatcher();
-watcher.Path = @"/home/pi/dev/interactivehackathon/data";
+watcher.Path = @"/home/pi/Desktop/interactiveHackathon/data";
 watcher.Changed += OnChangedAsync;
 watcher.Created += OnChangedAsync;
 watcher.Deleted += OnChangedAsync;

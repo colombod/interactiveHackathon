@@ -3,10 +3,10 @@ using SixLabors.Fonts;
 
 namespace BarcodeScanner
 {
-    public interface IWizardStep
+    public interface IWizardStep<T>
     {
         void Initialize(Display display, Font font);
-        void Confirm();
+        void Confirm(T data);
         void Up();
         void Down();
     }

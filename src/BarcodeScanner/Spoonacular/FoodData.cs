@@ -1,10 +1,12 @@
-﻿namespace BarcodeScanner.Spoonacular
+﻿using System;
+
+namespace BarcodeScanner.Spoonacular
 {
     public class FoodData
     {
         public Classification Classification { get; set; }
-        public string CreationDate { get; set; }
-        public string ExpirationDate { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
     }
 
     public class Classification
