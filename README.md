@@ -5,16 +5,18 @@
 Hackathon project 2020Image
 
 * capture (piTop, Diego)
-	* [ ] Live camera / Filesystem
+	* [ ] Live camera
+	* [x] Filesystem
 * Image processing ( Diego, Karishma )
 	* [ ] Barcode extraction
 * Data / AI (Karishma, Diego, Steve) 
     * [ ] Get info from bard code (what is this thing)
-	* [ ] Integrate spoonacular api
+	* [x] Integrate spoonacular classification API
+	* [ ] Integrate spoonacular ingredients API
 * App UX Design (piTop, Brady, Jon, Maria)
 	* [ ] User interactions
 	* [ ] User feedback
 * Output device (piTop, Diego, Jon, Brady, Maria, Tyler, Paul, John)
 	* [ ] Display hack???
 	* [ ] Leds
-    * [ ] Buzzer
+    	* [ ] Buzzer
