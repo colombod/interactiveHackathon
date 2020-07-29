@@ -1,4 +1,3 @@
-using System.Linq;
 using PiTop;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
@@ -6,6 +5,9 @@ using SixLabors.ImageSharp.Drawing.Processing;
 
 namespace BarcodeScanner
 {
+    public class Ingredient {
+        
+    }
     public enum WizardState
     {
         InProgress,
@@ -22,9 +24,7 @@ namespace BarcodeScanner
         public Wizard(PiTopModule module, IWizardStep[] steps)
         {
             _steps = steps;
-            // var font = new Font("Roboto", 12));
-            var family = SystemFonts.Families.First();
-            var font = family.CreateFont(12);
+            var font =  SystemFonts.Collection.Find("Roboto").CreateFont(16);
 
             module.UpButton.PressedChanged += (sender, pressed) => steps[_currentStep].Up();
 
@@ -40,11 +40,11 @@ namespace BarcodeScanner
                 }
                 else
                 {
-                    module.Display.Draw((context) => {
+                    module.Display.Draw((context, cr) => {
                         context.Clear(Color.Black);
                         var rect = TextMeasurer.Measure("Diego was here", new RendererOptions(font));
-                        var x = (module.Display.Width - rect.Width) / 2;
-                        var y = (module.Display.Height + rect.Height) / 2;
+                        var x = (cr.Width - rect.Width) / 2;
+                        var y = (cr.Height + rect.Height) / 2;
                         context.DrawText("Diego was here", font, Color.Aqua, new PointF(x, y));
                     });
                     CurrentState = WizardState.Completed;
@@ -52,11 +52,11 @@ namespace BarcodeScanner
             };
 
             module.CancelButton.PressedChanged += (sender, pressed) => {
-                module.Display.Draw((context) => {
+                module.Display.Draw((context, cr) => {
                     context.Clear(Color.Black);
                     var rect = TextMeasurer.Measure("Diego was here", new RendererOptions(font));
-                    var x = (module.Display.Width - rect.Width) / 2;
-                    var y = (module.Display.Height + rect.Height) / 2;
+                    var x = (cr.Width - rect.Width) / 2;
+                    var y = (cr.Height + rect.Height) / 2;
                     context.DrawText("Diego was here", font, Color.Aqua, new PointF(x, y));
                 });
                 CurrentState = WizardState.Cancelled;
