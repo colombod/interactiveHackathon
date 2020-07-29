@@ -55,13 +55,14 @@ namespace BarcodeScanner.Spoonacular
                     Path.Combine(writePath, $"{Path.GetFileNameWithoutExtension(fileName)}.json");
                 var foodData = new FoodData
                 {
-                    classification = new Classification
+                    Classification = new Classification
                     {
-                        category = classifyResponse.category,
-                        probability = classifyResponse.probability
+                        Succeeded = classifyResponse.Status == "success",
+                        Category = classifyResponse.Category,
+                        Probability = classifyResponse.Probability
                     },
-                    creationDate = DateTime.UtcNow.ToString("s"),
-                    expirationDate = ""
+                    CreationDate = DateTime.UtcNow.ToString("s"),
+                    ExpirationDate = ""
                 };
 
                 File.WriteAllText(jsonFilePath, JsonConvert.SerializeObject(foodData));

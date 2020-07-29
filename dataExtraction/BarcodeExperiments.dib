@@ -4,8 +4,9 @@ Build and pack project
 
 #!powershell
 
-dotnet build ../src
-dotnet pack /p:packageversion=2.2.1 ../src
+cd /home/pi/Desktop/interactiveHackathon/src
+dotnet build
+dotnet pack /p:packageversion=2.4.1
 
 #!markdown
 
