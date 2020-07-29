@@ -13,7 +13,7 @@ Add BarcodeScanner.nuget package source and install extension nuget.
 
 #!csharp
 
-#i "\full\path\to\interactiveHackathon\src\BarcodeScanner.nuget\bin\Debug\"
+#i "\path\to\interactiveHackathon\src\BarcodeScanner.nuget\bin\Debug\"
 #r nuget:Hackathon2020.BarcodeScanner
 
 #!markdown
@@ -44,16 +44,13 @@ barcodeLookupResult.products[0]
 
 using BarcodeScanner.Spoonacular;
 var spoonClient = new SpoonacularClient(secrets[1]);
-var spoonResult = await spoonClient.GetIngredientInfoAsync(Ingredients.DuckFat);
 
 #!csharp
 
-img[src:spoonResult.ImageMediumUrl]
+var ingredientResult = await spoonClient.GetIngredientInfoAsync(Ingredients.DuckFat);
+img[src:ingredientResult.ImageMediumUrl]
 
 #!csharp
 
-var classifyResult = await spoonClient.Classify(@"D:\Source\Repos\github\suhsteve\interactiveHackathon\data\duckfat.jpg");
-
-#!csharp
-
+var classifyResult = await spoonClient.Classify(@"\path\to\interactiveHackathon\data\coffee.jpg", @"\path\to\interactiveHackathon\data");
 classifyResult
