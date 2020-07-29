@@ -14,7 +14,7 @@ namespace BarcodeScanner
 
         public void Confirm()
         {
-            // idk
+            // assign field
         }
 
         public void Down()
@@ -41,11 +41,11 @@ namespace BarcodeScanner
         {
             var text = $"Expiration:\n{_expirationDate.Date.ToShortDateString()}";
 
-            _display.Draw((context) => {
+            _display.Draw((context, cr) => {
                 context.Clear(Color.Black);
                 var rect = TextMeasurer.Measure(text, new RendererOptions(_font));
-                var x = (_display.Width - rect.Width) / 2;
-                var y = (_display.Height + rect.Height) / 2;
+                var x = (cr.Width - rect.Width) / 2;
+                var y = (cr.Height + rect.Height) / 2;
                 context.DrawText(text, _font, Color.Aqua, new PointF(x, y));
             });
         }
