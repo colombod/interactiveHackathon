@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BarcodeScanner.Spoonacular
+﻿namespace BarcodeScanner.Spoonacular
 {
     public class ClassifyResponse
     {
