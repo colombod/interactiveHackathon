@@ -1,0 +1,200 @@
+#!markdown
+
+# Program
+
+## Step
+
+Install and load nuget packages and add usings:
+
+#!csharp
+
+#i "/home/pi/Desktop/interactiveHackathon/src/BarcodeScanner.nuget/bin/Debug/"
+#r "nuget:Hackathon2020.BarcodeScanner"
+#r "nuget:piTop,1.0.115"
+#r "nuget:piTop.FoundationKit,1.0.115"
+using System.IO;
+using BarcodeScanner;
+using BarcodeScanner.Spoonacular;
+using Newtonsoft.Json;
+using PiTop;
+using PiTopMakerArchitecture.Foundation;
+using PiTopMakerArchitecture.Foundation.Components;
+using PiTopMakerArchitecture.Foundation.Sensors;
+
+#!markdown
+
+## Setup Spoonacular
+
+#!csharp
+
+// load API key
+var spoonacularApiKey = System.IO.File.ReadAllText("/home/pi/spoonacular.txt").Trim();
+// create new client
+var spoonClient = new SpoonacularClient(spoonacularApiKey);
+
+#!markdown
+
+## Setup pi-top devices
+
+You should have the following connections:
+* Green LED in `D0`
+* Amber LED in `D1`
+* Red LED in `D2`
+
+#!csharp
+
+var module = new PiTopModule();
+var plate = module.GetOrCreatePlate<FoundationPlate>();
+
+var greenLed = plate.GetOrCreateDevice<Led>(DigitalPort.D0);
+greenLed.DisplayProperties.Add(new NamedCssColor("green"));
+
+var amberLed = plate.GetOrCreateDevice<Led>(DigitalPort.D1);
+amberLed.DisplayProperties.Add(new NamedCssColor("gold"));
+
+var redLed = plate.GetOrCreateDevice<Led>(DigitalPort.D2);
+redLed.DisplayProperties.Add(new NamedCssColor("red"));
+
+#!markdown
+
+Let's define a method that will run when the device is running something. Here we simply blink the LED.
+
+#!csharp
+
+void OnThinking()
+{
+    Task.Run(async () =>
+    {
+        for (int i = 0; i < 5; ++i)
+        {
+            redLed.On();
+            await Task.Delay(500);
+            redLed.Off();
+            await Task.Delay(500);
+        }
+    });
+}
+
+#!csharp
+
+public class ExpirationWizardStep : IWizardStep
+{
+    private DateTime _expirationDate = DateTime.Now;
+    private Display _display;
+    private Font _font;
+
+    public void Confirm()
+    {
+        
+    }
+
+    public void Down()
+    {
+        _expirationDate = _expirationDate.AddDays(-1);
+        RenderDateTime();
+    }
+
+    public void Initialize(Display display, Font font)
+    {
+        _display = display;
+        _font = font;
+        display.Clear();
+        RenderDateTime();
+    }
+
+    public void Up()
+    {
+        _expirationDate = _expirationDate.AddDays(1);
+        RenderDateTime();
+    }
+
+    private void RenderDateTime()
+    {
+        var text = $"Expiration:\n{_expirationDate.Date.ToShortDateString()}";
+
+        _display.Draw((context) => {
+            context.Clear(Color.Black);
+            var rect = TextMeasurer.Measure(text, new RendererOptions(_font));
+            var x = (_display.Width - rect.Width) / 2;
+            var y = (_display.Height + rect.Height) / 2;
+            context.DrawText(text, _font, Color.Aqua, new PointF(x, y));
+        });
+    }
+}
+
+#!csharp
+
+display(module.Display);
+var wizard = new Wizard(module, new []
+{
+    Wizard.CreateStep(
+        initialPrompt: "Diego was here",
+        confirm: () => {},
+        up: () => "went up",
+        down: () => "went down"
+    )
+});
+
+#!csharp
+
+FileInfo WriteFoodDataFile(string imageFile, ClassifyResponse classifyResponse)
+{
+    string directory = Path.GetDirectoryName(imageFile);
+    Directory.CreateDirectory(directory);
+
+    var jsonFilePath =
+        Path.Combine(directory, $"{Path.GetFileNameWithoutExtension(imageFile)}.json");
+    var foodData = new FoodData
+    {
+        Classification = new Classification
+        {
+            Succeeded = classifyResponse.Status == "success",
+            Category = classifyResponse.Category,
+            Probability = classifyResponse.Probability
+        },
+        CreationDate = DateTime.UtcNow.ToString("s"),
+        ExpirationDate = ""
+    };
+
+    File.WriteAllText(jsonFilePath, JsonConvert.SerializeObject(foodData));
+    return new FileInfo(jsonFilePath);
+}
+
+#!csharp
+
+async void OnChangedAsync(object source, FileSystemEventArgs e)
+{
+    OnThinking();
+
+
+    if (!File.Exists(e.FullPath))
+    {
+        return;
+    }
+
+    switch (Path.GetExtension(e.FullPath))
+    {
+        case ".bmp":
+        case ".gif":
+        case ".jpg":
+        case ".jpeg":
+        case ".png":
+        case ".tiff":
+            var classifyResult = await spoonClient.Classify(e.FullPath);
+            var jsonFileInfo = WriteFoodDataFile(e.FullPath, classifyResult);
+            break;
+        case ".json":
+            if (wizard.CurrentState == WizardState.NotStarted)
+            {
+                wizard.Start(e.FullPath);
+            }
+            break;
+    }
+}
+
+var watcher = new FileSystemWatcher();
+watcher.Path = @"/home/pi/dev/interactivehackathon/data";
+watcher.Changed += OnChangedAsync;
+watcher.Created += OnChangedAsync;
+watcher.Deleted += OnChangedAsync;
+watcher.EnableRaisingEvents = true;

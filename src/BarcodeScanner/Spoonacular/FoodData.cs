@@ -2,14 +2,15 @@
 {
     public class FoodData
     {
-        public Classification classification { get; set; }
-        public string creationDate { get; set; }
-        public string expirationDate { get; set; }
+        public Classification Classification { get; set; }
+        public string CreationDate { get; set; }
+        public string ExpirationDate { get; set; }
     }
 
     public class Classification
     {
-        public string category { get; set; }
-        public double probability { get; set; }
+        public bool Succeeded { get; set; }
+        public string Category { get; set; }
+        public double Probability { get; set; }
     }
 }

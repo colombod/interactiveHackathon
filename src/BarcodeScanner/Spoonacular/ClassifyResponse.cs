@@ -2,8 +2,8 @@
 {
     public class ClassifyResponse
     {
-        public string status { get; set; }
-        public string category { get; set; }
-        public double probability { get; set; }
+        public string Status { get; set; }
+        public string Category { get; set; }
+        public double Probability { get; set; }
     }
 }
