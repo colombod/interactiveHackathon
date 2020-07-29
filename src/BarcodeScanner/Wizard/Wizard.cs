@@ -12,77 +12,86 @@ namespace BarcodeScanner
     }
     public enum WizardState
     {
+        NotStarted,
         InProgress,
         Completed,
         Cancelled
     }
 
-    public class Wizard
+    public class Wizard<T>
     {
-        private readonly IWizardStep[] _steps;
+        private Font _font = SystemFonts.Collection.Find("FreeMono").CreateFont(16);
+        private readonly IWizardStep<T>[] _steps;
         private int _currentStep;
-        public WizardState CurrentState { get; private set; }
+        public WizardState CurrentState { get; private set; } = WizardState.NotStarted;
+        private Display _display;
+        private T _data;
 
-        public Wizard(PiTopModule module, IWizardStep[] steps)
+        public Wizard(PiTopModule module, IWizardStep<T>[] steps)
         {
             _steps = steps;
-            var font =  SystemFonts.Collection.Find("FreeMono").CreateFont(16);
+            _display = module.Display;
 
             module.UpButton.PressedChanged += (sender, pressed) => steps[_currentStep].Up();
 
             module.DownButton.PressedChanged += (sender, pressed) => steps[_currentStep].Down();
 
             module.SelectButton.PressedChanged += (sender, pressed) => {
-                steps[_currentStep].Confirm();
+                steps[_currentStep].Confirm(_data);
                 var nextStep = _currentStep + 1;
                 if (nextStep < steps.Length)
                 {
                     _currentStep = nextStep;
-                    steps[_currentStep].Initialize(module.Display, font);
+                    steps[_currentStep].Initialize(_display, _font);
                 }
                 else
                 {
-                    module.Display.Draw((context, cr) => {
+                    _display.Draw((context, cr) => {
                         context.Clear(Color.Black);
-                        var rect = TextMeasurer.Measure("Diego was here", new RendererOptions(font));
+                        var rect = TextMeasurer.Measure("Done!", new RendererOptions(_font));
                         var x = (cr.Width - rect.Width) / 2;
                         var y = (cr.Height + rect.Height) / 2;
-                        context.DrawText("Diego was here", font, Color.Aqua, new PointF(x, y));
+                        context.DrawText("Done!", _font, Color.Aqua, new PointF(x, y));
                     });
                     CurrentState = WizardState.Completed;
                 }
             };
 
             module.CancelButton.PressedChanged += (sender, pressed) => {
-                module.Display.Draw((context, cr) => {
+                _display.Draw((context, cr) => {
                     context.Clear(Color.Black);
-                    var rect = TextMeasurer.Measure("Diego was here", new RendererOptions(font));
+                    var rect = TextMeasurer.Measure("Cancelled.", new RendererOptions(_font));
                     var x = (cr.Width - rect.Width) / 2;
                     var y = (cr.Height + rect.Height) / 2;
-                    context.DrawText("Diego was here", font, Color.Aqua, new PointF(x, y));
+                    context.DrawText("Cancelled.", _font, Color.Aqua, new PointF(x, y));
                 });
                 CurrentState = WizardState.Cancelled;
             };
+        }
 
+        public void Start(T data)
+        {
+            _data = data;
             CurrentState = WizardState.InProgress;
-            steps[_currentStep].Initialize(module.Display, font);
+            _currentStep = 0;
+            _steps[_currentStep].Initialize(_display, _font);
         }
 
-        public static IWizardStep CreateStep(string initialPrompt, Action confirm, Func<string> up, Func<string> down)
+        public static IWizardStep<T> CreateStep(string initialPrompt, Action<T> confirm, Func<string> up, Func<string> down)
         {
-            return new AnonymousWizardStep(initialPrompt, confirm, up, down);
+            return new AnonymousWizardStep<T>(initialPrompt, confirm, up, down);
         }
 
-        private class AnonymousWizardStep : IWizardStep
+        private class AnonymousWizardStep<T> : IWizardStep<T>
         {
-            private Action _confirm;
+            private Action<T> _confirm;
             private Func<string> _up;
             private Func<string> _down;
             private Display _display;
             private Font _font;
             private string _initialPrompt;
 
-            internal AnonymousWizardStep(string initialPrompt, Action confirm, Func<string> up, Func<string> down)
+            internal AnonymousWizardStep(string initialPrompt, Action<T> confirm, Func<string> up, Func<string> down)
             {
                 _confirm = confirm;
                 _up = up;
@@ -96,7 +105,7 @@ namespace BarcodeScanner
                 DisplayNewPrompt(_initialPrompt);
             }
 
-            public void Confirm() => _confirm();
+            public void Confirm(T data) => _confirm(data);
 
             public void Up()
             {

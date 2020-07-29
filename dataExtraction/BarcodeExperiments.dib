@@ -6,7 +6,7 @@ Build and pack project
 
 cd /home/pi/Desktop/interactiveHackathon/src
 dotnet build
-dotnet pack /p:packageversion=2.4.1
+dotnet pack /p:packageversion=2.6.1
 
 #!markdown
 
