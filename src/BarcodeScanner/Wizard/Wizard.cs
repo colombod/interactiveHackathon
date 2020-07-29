@@ -26,11 +26,11 @@ namespace BarcodeScanner
             var family = SystemFonts.Families.First();
             var font = family.CreateFont(12);
 
-            module.UpButton.PressedChanged += (object sender, bool pressed) => steps[_currentStep].Up();
+            module.UpButton.PressedChanged += (sender, pressed) => steps[_currentStep].Up();
 
-            module.DownButton.PressedChanged += (object sender, bool pressed) => steps[_currentStep].Down();
+            module.DownButton.PressedChanged += (sender, pressed) => steps[_currentStep].Down();
 
-            module.SelectButton.PressedChanged += (object sender, bool pressed) => {
+            module.SelectButton.PressedChanged += (sender, pressed) => {
                 steps[_currentStep].Confirm();
                 var nextStep = _currentStep + 1;
                 if (nextStep < steps.Length)
@@ -51,7 +51,7 @@ namespace BarcodeScanner
                 }
             };
 
-            module.CancelButton.PressedChanged += (object sender, bool pressed) => {
+            module.CancelButton.PressedChanged += (sender, pressed) => {
                 module.Display.Draw((context) => {
                     context.Clear(Color.Black);
                     var rect = TextMeasurer.Measure("Diego was here", new RendererOptions(font));
