@@ -49,3 +49,11 @@ var spoonResult = await spoonClient.GetIngredientInfoAsync(Ingredients.DuckFat);
 #!csharp
 
 img[src:spoonResult.ImageMediumUrl]
+
+#!csharp
+
+var classifyResult = await spoonClient.Classify(@"D:\Source\Repos\github\suhsteve\interactiveHackathon\data\duckfat.jpg");
+
+#!csharp
+
+classifyResult
