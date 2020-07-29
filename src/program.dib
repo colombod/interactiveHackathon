@@ -25,6 +25,8 @@ using PiTopMakerArchitecture.Foundation.Sensors;
 
 ## Setup Spoonacular
 
+You'll need a [Spoonacular](https://spoonacular.com/) API key. Store it in a file called `spoonacular.txt` in the same directory as this notebook.
+
 #!csharp
 
 // load API key
