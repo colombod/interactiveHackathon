@@ -8,7 +8,7 @@ Hackathon project 2020Image
 	* [ ] Live camera
 	* [x] Filesystem
 * Image processing ( Diego, Karishma )
-	* [ ] Barcode extraction
+	* [x] Barcode extraction
 * Data / AI (Karishma, Diego, Steve) 
     * [ ] Get info from bard code (what is this thing)
 	* [x] Integrate spoonacular classification API
@@ -17,6 +17,6 @@ Hackathon project 2020Image
 	* [ ] User interactions
 	* [ ] User feedback
 * Output device (piTop, Diego, Jon, Brady, Maria, Tyler, Paul, John)
-	* [ ] Display hack???
-	* [ ] Leds
+	* [x] Display hack???
+	* [x] Leds
     	* [ ] Buzzer
