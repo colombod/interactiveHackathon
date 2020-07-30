@@ -8,12 +8,11 @@ Install and load nuget packages and add usings:
 
 #!csharp
 
-#!connect signalr --kernel-name pi-top --hub-url http://pitop-jon.ngrok.io/kernelHub
+#!connect signalr --kernel-name pi-top --hub-url http://pitop-diego.ngrok.io/kernelHub
 
 #!csharp
 
 #!pi-top
-#i "/home/pi/localNuget/"
 #r "nuget:Hackathon2020.BarcodeScanner"
 #r "nuget:piTop"
 #r "nuget:piTop.FoundationKit"
@@ -30,6 +29,7 @@ using PiTopMakerArchitecture.Foundation.Components;
 using PiTopMakerArchitecture.Foundation.Sensors;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
+using SixLabors.ImageSharp;
 
 #!markdown
 
@@ -67,14 +67,15 @@ You should have the following connections:
 var module = PiTopModule.Instance;
 var plate = module.GetOrCreatePlate<FoundationPlate>();
 
-var greenLed = plate.GetOrCreateDevice<Led>(DigitalPort.D0);
-greenLed.DisplayProperties.Add(new NamedCssColor("green"));
+var greenLed = plate.GetOrCreateLed(DigitalPort.D0, Color.Red);
 
-var amberLed = plate.GetOrCreateDevice<Led>(DigitalPort.D1);
-amberLed.DisplayProperties.Add(new NamedCssColor("gold"));
+var amberLed = plate.GetOrCreateLed(DigitalPort.D1, Color.Gold);
 
-var redLed = plate.GetOrCreateDevice<Led>(DigitalPort.D2);
-redLed.DisplayProperties.Add(new NamedCssColor("red"));
+var redLed = plate.GetOrCreateLed(DigitalPort.D2, Color.Red);
+
+var cameraTrigger = plate.GetOrCreateButton(DigitalPort.D4);
+
+var amazingCamera = new LegoCamera(cameraTrigger, new DirectoryInfo(@"/home/pi/dev/interactivehackathon/data"));
 
 #!markdown
 
@@ -148,6 +149,8 @@ This is a simple helper function that is used to write the data we get back from
 #!csharp
 
 #!pi-top
+
+FileSystemWatcher watcher = null;
 FileInfo WriteFoodDataFile(string imageFile, ImageAnalysis classifyResponse)
 {
     string directory = Path.GetDirectoryName(imageFile);
@@ -155,14 +158,14 @@ FileInfo WriteFoodDataFile(string imageFile, ImageAnalysis classifyResponse)
 
     var jsonFilePath =
         Path.Combine(directory, $"{Path.GetFileNameWithoutExtension(imageFile)}.json");
-    var foodResult = classifyResponse.Tags.Where(t => t.Hint == "food").FirstOrDefault() ?? classifyResponse.Tags.FirstOrDefault();
+    var foodResult = classifyResponse.Tags?.Where(t => t.Hint == "food").FirstOrDefault() ?? classifyResponse.Tags?.FirstOrDefault();
     var foodData = new FoodData
     {
         Classification = new Classification
         {
             Succeeded = true,
-            Category = foodResult.Name,
-            Probability = foodResult.Confidence
+            Category = foodResult?.Name,
+            Probability = foodResult?.Confidence??0
         },
         CreationDate = DateTime.UtcNow,
         ExpirationDate = null
@@ -206,15 +209,21 @@ async void OnChangedAsync(object source, FileSystemEventArgs e)
             var jsonFileInfo = WriteFoodDataFile(e.FullPath, classifyResult);
             break;
         case ".json":
-            if (wizard.CurrentState == WizardState.NotStarted)
+            if (wizard.CurrentState != WizardState.InProgress)
             {
-                wizard.Start(new FileInfo(e.FullPath));
+                var info = new FileInfo(e.FullPath);
+                var foodData = JsonConvert.DeserializeObject<FoodData>(File.ReadAllText(info.FullName));
+                if (foodData != null && foodData.ExpirationDate == null)
+                {
+                    wizard.Start(info);
+                }
             }
             break;
     }
 }
 
-var watcher = new FileSystemWatcher();
+watcher?.Dispose();
+watcher = new FileSystemWatcher();
 watcher.Path = @"/home/pi/dev/interactivehackathon/data";
 watcher.Changed += OnChangedAsync;
 watcher.Created += OnChangedAsync;

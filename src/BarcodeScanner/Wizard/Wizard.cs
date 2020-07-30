@@ -20,11 +20,11 @@ namespace BarcodeScanner
 
     public class Wizard<T>
     {
-        private Font _font = SystemFonts.Collection.Find("FreeMono").CreateFont(16);
+        private readonly Font _font = SystemFonts.Collection.Find("FreeMono").CreateFont(16);
         private readonly IWizardStep<T>[] _steps;
         private int _currentStep;
         public WizardState CurrentState { get; private set; } = WizardState.NotStarted;
-        private Display _display;
+        private readonly Display _display;
         private T _data;
 
         public Wizard(PiTopModule module, IWizardStep<T>[] steps)
@@ -97,17 +97,17 @@ namespace BarcodeScanner
 
         public static IWizardStep<T> CreateStep(string initialPrompt, Action<T> confirm, Func<string> up, Func<string> down)
         {
-            return new AnonymousWizardStep<T>(initialPrompt, confirm, up, down);
+            return new AnonymousWizardStep(initialPrompt, confirm, up, down);
         }
 
-        private class AnonymousWizardStep<T> : IWizardStep<T>
+        private class AnonymousWizardStep : IWizardStep<T>
         {
-            private Action<T> _confirm;
-            private Func<string> _up;
-            private Func<string> _down;
+            private readonly Action<T> _confirm;
+            private readonly Func<string> _up;
+            private readonly Func<string> _down;
             private Display _display;
             private Font _font;
-            private string _initialPrompt;
+            private readonly string _initialPrompt;
 
             internal AnonymousWizardStep(string initialPrompt, Action<T> confirm, Func<string> up, Func<string> down)
             {
