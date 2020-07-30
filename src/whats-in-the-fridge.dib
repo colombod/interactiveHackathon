@@ -1,5 +1,10 @@
 #!csharp
 
+#!connect signalr --kernel-name pi-top --hub-url http://pitop-jon.ngrok.io/kernelHub
+
+#!csharp
+
+#!pi-top
 #r "nuget:Hackathon2020.BarcodeScanner"
 using BarcodeScanner;
 using BarcodeScanner.Spoonacular;
@@ -9,25 +14,30 @@ using System.IO;
 
 #!csharp
 
+#!pi-top
 Formatter<FileInfo>.Register((f, writer) => writer.WriteLine(f.FullName));
 Formatter<DirectoryInfo>.Register((f, writer) => writer.WriteLine(f.FullName));
 
 #!csharp
 
-var dir = new DirectoryInfo(@"c:\dev\interactiveHackathon\data\");
+#!pi-top
+var dir = new DirectoryInfo(@"/home/pi/dev/interactivehackathon/data");
 var dataFiles = dir.GetFiles(Path.Combine("*.json"));
 dataFiles.Select(f => f.Name)
 
 #!csharp
 
+#!pi-top
 var data = dataFiles.Select(f => JsonConvert.DeserializeObject<FoodData>(File.ReadAllText(f.FullName)));
 
 #!csharp
 
+#!pi-top
 data
 
 #!csharp
 
+#!pi-top
 using XPlot.Plotly;
 
 var foodsByDate = data
