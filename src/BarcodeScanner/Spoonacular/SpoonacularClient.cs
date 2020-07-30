@@ -27,7 +27,7 @@ namespace BarcodeScanner.Spoonacular
             return JsonConvert.DeserializeObject<IngredientInfo>(ingredientInformationJson);
         }
 
-        public async Task<ClassifyResponse> Classify(string filePath, string writePath = null)
+        public async Task<ClassifyResponse> Classify(string filePath)
         {
             var fileName = Path.GetFileName(filePath);
             using var stream = new FileStream(filePath, FileMode.Open);
@@ -47,26 +47,6 @@ namespace BarcodeScanner.Spoonacular
             var response = await _client.PostAsync($"food/images/classify?apiKey={_apiKey}", form);
             var contentJson = await response.Content.ReadAsStringAsync();
             var classifyResponse = JsonConvert.DeserializeObject<ClassifyResponse>(contentJson);
-
-            if (!string.IsNullOrWhiteSpace(writePath))
-            {
-                Directory.CreateDirectory(writePath);
-                var jsonFilePath =
-                    Path.Combine(writePath, $"{Path.GetFileNameWithoutExtension(fileName)}.json");
-                var foodData = new FoodData
-                {
-                    Classification = new Classification
-                    {
-                        Succeeded = classifyResponse.Status == "success",
-                        Category = classifyResponse.Category,
-                        Probability = classifyResponse.Probability
-                    },
-                    CreationDate = DateTime.UtcNow,
-                    ExpirationDate = null
-                };
-
-                File.WriteAllText(jsonFilePath, JsonConvert.SerializeObject(foodData));
-            }
 
             return classifyResponse;
         }
