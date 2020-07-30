@@ -205,15 +205,20 @@ async void OnChangedAsync(object source, FileSystemEventArgs e)
             var jsonFileInfo = WriteFoodDataFile(e.FullPath, classifyResult);
             break;
         case ".json":
-            if (wizard.CurrentState == WizardState.NotStarted)
+            if (wizard.CurrentState != WizardState.InProgress)
             {
-                wizard.Start(new FileInfo(e.FullPath));
+                var info = new FileInfo(e.FullPath);
+                var foodData = JsonConvert.DeserializeObject<FoodData>(File.ReadAllText(info.FullName));
+                if (foodData.ExpirationDate == null)
+                {
+                    wizard.Start(info);
+                }
             }
             break;
     }
 }
 
-watcher.?Dispose();
+watcher?.Dispose();
 watcher = new FileSystemWatcher();
 watcher.Path = @"/home/pi/dev/interactivehackathon/data";
 watcher.Changed += OnChangedAsync;
