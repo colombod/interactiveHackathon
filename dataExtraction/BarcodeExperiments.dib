@@ -53,5 +53,5 @@ img[src:ingredientResult.ImageMediumUrl]
 
 #!csharp
 
-var classifyResult = await spoonClient.Classify(@"\path\to\interactiveHackathon\data\coffee.jpg", @"\path\to\interactiveHackathon\data");
+var classifyResult = await spoonClient.Classify(@"\path\to\interactiveHackathon\data\coffee.jpg");
 classifyResult

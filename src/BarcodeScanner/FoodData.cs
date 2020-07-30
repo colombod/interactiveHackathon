@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BarcodeScanner.Spoonacular
+namespace BarcodeScanner
 {
     public class FoodData
     {
