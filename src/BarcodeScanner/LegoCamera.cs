@@ -36,7 +36,7 @@ namespace BarcodeScanner
         private void triggerOnPressed(object? o, EventArgs eventArgs)
         {
 
-            if (_images.Length > 0)
+            if (_images?.Length > 0)
             {
                 var image = _images[_currentImage];
                 File.SetLastWriteTimeUtc(image.FullName, DateTime.UtcNow);

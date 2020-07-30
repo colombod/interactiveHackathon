@@ -76,6 +76,7 @@ var redLed = plate.GetOrCreateLed(DigitalPort.D2, Color.Red);
 var cameraTrigger = plate.GetOrCreateButton(DigitalPort.D4);
 
 var amazingCamera = new LegoCamera(cameraTrigger, new DirectoryInfo(@"/home/pi/dev/interactivehackathon/data"));
+amazingCamera.Reload();
 
 #!markdown
 
