@@ -1,0 +1,65 @@
+#!csharp
+
+#r "nuget:Hackathon2020.BarcodeScanner"
+using BarcodeScanner;
+using BarcodeScanner.Spoonacular;
+using Newtonsoft.Json;
+using System.Linq;
+using System.IO;
+
+#!csharp
+
+Formatter<FileInfo>.Register((f, writer) => writer.WriteLine(f.FullName));
+Formatter<DirectoryInfo>.Register((f, writer) => writer.WriteLine(f.FullName));
+
+#!csharp
+
+var dir = new DirectoryInfo(@"c:\dev\interactiveHackathon\data\");
+var dataFiles = dir.GetFiles(Path.Combine("*.json"));
+dataFiles.Select(f => f.Name)
+
+#!csharp
+
+var data = dataFiles.Select(f => JsonConvert.DeserializeObject<FoodData>(File.ReadAllText(f.FullName)));
+
+#!csharp
+
+data
+
+#!csharp
+
+using XPlot.Plotly;
+
+var foodsByDate = data
+    .Where(d => d.ExpirationDate != default)
+    .OrderBy(a => a.ExpirationDate)
+    .ToArray();
+
+var foods = new Graph.Scatter
+{
+    name = "Foods",
+    x = foodsByDate.Select(a => a.ExpirationDate?.Date),
+    y = foodsByDate.Select(a => a.Classification.Category),
+    mode = "markers",
+    marker = new Graph.Marker
+    {  
+        color = "rgb(30, 100, 180)",
+        size = 18
+    }
+};
+
+var layout = new Layout.Layout
+{
+    xaxis = new Graph.Xaxis 
+    {
+        ticktext = foodsByDate.Select(a => a.ExpirationDate?.Date.ToShortDateString()),
+        tickmode = "array",
+        tickvals = foodsByDate.Select(a => a.ExpirationDate?.Date),
+        title = "Expires"
+    }
+};
+
+var plot = Chart.Plot(new Graph.Scatter[] { foods } );
+plot.WithLayout(layout);
+plot.WithTitle("What should we eat first?");
+plot
