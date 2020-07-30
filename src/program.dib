@@ -29,6 +29,7 @@ using PiTopMakerArchitecture.Foundation.Components;
 using PiTopMakerArchitecture.Foundation.Sensors;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
+using SixLabors.ImageSharp;
 
 #!markdown
 
@@ -66,14 +67,11 @@ You should have the following connections:
 var module = PiTopModule.Instance;
 var plate = module.GetOrCreatePlate<FoundationPlate>();
 
-var greenLed = plate.GetOrCreateDevice<Led>(DigitalPort.D0);
-greenLed.DisplayProperties.Add(new NamedCssColor("green"));
+var greenLed = plate.GetOrCreateLed(DigitalPort.D0, Color.Red);
 
-var amberLed = plate.GetOrCreateDevice<Led>(DigitalPort.D1);
-amberLed.DisplayProperties.Add(new NamedCssColor("gold"));
+var amberLed = plate.GetOrCreateLed(DigitalPort.D1, Color.Gold);
 
-var redLed = plate.GetOrCreateDevice<Led>(DigitalPort.D2);
-redLed.DisplayProperties.Add(new NamedCssColor("red"));
+var redLed = plate.GetOrCreateLed(DigitalPort.D2, Color.Red);
 
 #!markdown
 
