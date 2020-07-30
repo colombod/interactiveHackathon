@@ -1,11 +1,10 @@
 #!csharp
 
-#!connect signalr --kernel-name pi-top --hub-url http://pitop-jon.ngrok.io/kernelHub
+#!connect signalr --kernel-name pi-top --hub-url http://pitop-diego.ngrok.io/kernelHub
 
 #!csharp
 
 #!pi-top
-#r "nuget:Hackathon2020.BarcodeScanner"
 using BarcodeScanner;
 using BarcodeScanner.Spoonacular;
 using Newtonsoft.Json;

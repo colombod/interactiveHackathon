@@ -8,7 +8,7 @@ Install and load nuget packages and add usings:
 
 #!csharp
 
-#!connect signalr --kernel-name pi-top --hub-url http://pitop-jon.ngrok.io/kernelHub
+#!connect signalr --kernel-name pi-top --hub-url http://pitop-diego.ngrok.io/kernelHub
 
 #!csharp
 
@@ -72,6 +72,10 @@ var greenLed = plate.GetOrCreateLed(DigitalPort.D0, Color.Red);
 var amberLed = plate.GetOrCreateLed(DigitalPort.D1, Color.Gold);
 
 var redLed = plate.GetOrCreateLed(DigitalPort.D2, Color.Red);
+
+var cameraTrigger = plate.GetOrCreateButton(DigitalPort.D4);
+
+var amazingCamera = new LegoCamera(cameraTrigger, new DirectoryInfo(@"/home/pi/dev/interactivehackathon/data"));
 
 #!markdown
 

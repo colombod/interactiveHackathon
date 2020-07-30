@@ -24,12 +24,12 @@ namespace BarcodeScanner
             _imageTypes = new HashSet<string>
             {
 
-                "bmp",
-                "gif",
-                "jpg",
-                "jpeg",
-                "png",
-                "tiff"
+                ".bmp",
+                ".gif",
+                ".jpg",
+                ".jpeg",
+                ".png",
+                ".tiff"
             };
         }
 
