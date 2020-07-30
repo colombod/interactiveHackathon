@@ -154,14 +154,14 @@ FileInfo WriteFoodDataFile(string imageFile, ImageAnalysis classifyResponse)
 
     var jsonFilePath =
         Path.Combine(directory, $"{Path.GetFileNameWithoutExtension(imageFile)}.json");
-    var foodResult = classifyResponse.Tags.Where(t => t.Hint == "food").FirstOrDefault() ?? classifyResponse.Tags.FirstOrDefault();
+    var foodResult = classifyResponse.Tags?.Where(t => t.Hint == "food").FirstOrDefault() ?? classifyResponse.Tags?.FirstOrDefault();
     var foodData = new FoodData
     {
         Classification = new Classification
         {
             Succeeded = true,
-            Category = foodResult.Name,
-            Probability = foodResult.Confidence
+            Category = foodResult?.Name,
+            Probability = foodResult?.Confidence??0
         },
         CreationDate = DateTime.UtcNow,
         ExpirationDate = null
@@ -209,7 +209,7 @@ async void OnChangedAsync(object source, FileSystemEventArgs e)
             {
                 var info = new FileInfo(e.FullPath);
                 var foodData = JsonConvert.DeserializeObject<FoodData>(File.ReadAllText(info.FullName));
-                if (foodData.ExpirationDate == null)
+                if (foodData != null && foodData.ExpirationDate == null)
                 {
                     wizard.Start(info);
                 }

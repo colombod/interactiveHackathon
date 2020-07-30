@@ -15,6 +15,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.CognitiveServices.Vision.ComputerVision" Version="5.0.0" />
     <PackageReference Include="piTop" Version="1.0.122" />
+    <PackageReference Include="piTop.FoundationKit" Version="1.0.122" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0010" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="piTop.Camera" Version="1.0.122" />
