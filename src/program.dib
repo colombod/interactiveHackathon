@@ -64,7 +64,7 @@ You should have the following connections:
 #!csharp
 
 #!pi-top
-var module = new PiTopModule();
+var module = PiTopModule.Instance;
 var plate = module.GetOrCreatePlate<FoundationPlate>();
 
 var greenLed = plate.GetOrCreateDevice<Led>(DigitalPort.D0);
