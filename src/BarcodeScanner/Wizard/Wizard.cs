@@ -32,9 +32,19 @@ namespace BarcodeScanner
             _steps = steps;
             _display = module.Display;
 
-            module.UpButton.PressedChanged += (sender, pressed) => steps[_currentStep].Up();
+            module.UpButton.PressedChanged += (sender, pressed) => {
+                if (pressed)
+                {
+                    steps[_currentStep].Up();
+                }
+            };
 
-            module.DownButton.PressedChanged += (sender, pressed) => steps[_currentStep].Down();
+            module.DownButton.PressedChanged += (sender, pressed) => {
+                if (pressed)
+                {
+                    steps[_currentStep].Down();
+                }
+            };
 
             module.SelectButton.PressedChanged += (sender, pressed) => {
                 steps[_currentStep].Confirm(_data);
@@ -49,8 +59,8 @@ namespace BarcodeScanner
                     _display.Draw((context, cr) => {
                         context.Clear(Color.Black);
                         var rect = TextMeasurer.Measure("Done!", new RendererOptions(_font));
-                        var x = (cr.Width - rect.Width) / 2;
-                        var y = (cr.Height + rect.Height) / 2;
+                        var x = 1;
+                        var y = 1;
                         context.DrawText("Done!", _font, Color.Aqua, new PointF(x, y));
                     });
                     CurrentState = WizardState.Completed;
@@ -61,8 +71,8 @@ namespace BarcodeScanner
                 _display.Draw((context, cr) => {
                     context.Clear(Color.Black);
                     var rect = TextMeasurer.Measure("Cancelled.", new RendererOptions(_font));
-                    var x = (cr.Width - rect.Width) / 2;
-                    var y = (cr.Height + rect.Height) / 2;
+                    var x = 1;
+                    var y = 1;
                     context.DrawText("Cancelled.", _font, Color.Aqua, new PointF(x, y));
                 });
                 CurrentState = WizardState.Cancelled;
@@ -74,7 +84,15 @@ namespace BarcodeScanner
             _data = data;
             CurrentState = WizardState.InProgress;
             _currentStep = 0;
+            _display.Clear();
             _steps[_currentStep].Initialize(_display, _font);
+        }
+
+        public void Reset()
+        {
+            CurrentState = WizardState.NotStarted;
+            _currentStep = 0;
+            _display.Clear();
         }
 
         public static IWizardStep<T> CreateStep(string initialPrompt, Action<T> confirm, Func<string> up, Func<string> down)
@@ -124,8 +142,8 @@ namespace BarcodeScanner
                 _display.Draw((context, cr) => {
                     context.Clear(Color.Black);
                     var rect = TextMeasurer.Measure(newPrompt, new RendererOptions(_font));
-                    var x = (cr.Width - rect.Width) / 2;
-                    var y = (cr.Height + rect.Height) / 2;
+                    var x = 1;
+                    var y = 1;
                     context.DrawText(newPrompt, _font, Color.Aqua, new PointF(x, y));
                 });
             }
