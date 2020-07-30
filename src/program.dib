@@ -90,12 +90,12 @@ Once the user hits confirm, that value is saved to the json file.
 
 var dateTime = DateTime.UtcNow.Date;
 
-string NewPrompt() => dateTime.ToShortDateString(); //$"When does this expire?\n{dateTime.ToShortDateString()}";
+string NewPrompt() => $"Expire date?\n{dateTime.ToShortDateString()}";
 module.Display.Clear();
 var wizard = new Wizard<FileInfo>(module, new []
 {
     Wizard<FileInfo>.CreateStep(
-        initialPrompt: dateTime.ToShortDateString(), //$"When does this expire?\n{dateTime.ToShortDateString()}",
+        initialPrompt: $"Expire date?\n{dateTime.ToShortDateString()}",
         confirm: (FileInfo info) => {
             var foodData = JsonConvert.DeserializeObject<FoodData>(File.ReadAllText(info.FullName));
             foodData.ExpirationDate = dateTime;
@@ -179,6 +179,7 @@ async void OnChangedAsync(object source, FileSystemEventArgs e)
         case ".tiff":
             var classifyResult = await spoonClient.Classify(e.FullPath);
             var jsonFileInfo = WriteFoodDataFile(e.FullPath, classifyResult);
+            wizard.Reset();
             break;
         case ".json":
             if (wizard.CurrentState == WizardState.NotStarted)
