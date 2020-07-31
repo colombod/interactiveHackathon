@@ -85,7 +85,7 @@ Let's define a method that will run when the device is running something. Here w
 #!csharp
 
 #!pi-top
-void OnThinking()
+Action OnImageProcessing = ()=>
 {
     Task.Run(async () =>
     {
@@ -96,8 +96,24 @@ void OnThinking()
             redLed.Off();
             await Task.Delay(500);
         }
+        redLed.Off();
     });
-}
+};
+
+Action OnDataProcessing = ()=>
+{
+    Task.Run(async () =>
+    {
+        for (int i = 0; i < 5; ++i)
+        {
+            redLed.On();
+            await Task.Delay(500);
+            redLed.Off();
+            await Task.Delay(500);
+        }
+        redLed.Off();
+    });
+};
 
 #!markdown
 
@@ -190,8 +206,6 @@ Our file system watcher. The sequence goes like this:
 #!pi-top
 async void OnChangedAsync(object source, FileSystemEventArgs e)
 {
-    OnThinking();
-
 
     if (!File.Exists(e.FullPath))
     {
@@ -206,16 +220,18 @@ async void OnChangedAsync(object source, FileSystemEventArgs e)
         case ".jpeg":
         case ".png":
         case ".tiff":
+            OnImageProcessing();
             var classifyResult = await computerVisionFoodClient.Classify(e.FullPath);
             var jsonFileInfo = WriteFoodDataFile(e.FullPath, classifyResult);
             break;
         case ".json":
+            OnDataProcessing();
             if (wizard.CurrentState != WizardState.InProgress)
             {
                 var info = new FileInfo(e.FullPath);
                 var foodData = JsonConvert.DeserializeObject<FoodData>(File.ReadAllText(info.FullName));
                 if (foodData != null && foodData.ExpirationDate == null)
-                {
+                {                   
                     wizard.Start(info);
                 }
             }
@@ -230,3 +246,21 @@ watcher.Changed += OnChangedAsync;
 watcher.Created += OnChangedAsync;
 watcher.Deleted += OnChangedAsync;
 watcher.EnableRaisingEvents = true;
+
+#!csharp
+
+#!pi-top
+OnDataProcessing = ()=>
+{
+    Task.Run(async () =>
+    {
+        for (int i = 0; i < 5; ++i)
+        {
+            greenLed.On();
+            await Task.Delay(500);
+            greenLed.Off();
+            await Task.Delay(500);
+        }
+        greenLed.Off();
+    });
+};
