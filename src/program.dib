@@ -14,8 +14,8 @@ Install and load nuget packages and add usings:
 
 #!pi-top
 #r "nuget:Hackathon2020.BarcodeScanner"
-#r "nuget:piTop"
-#r "nuget:piTop.FoundationKit"
+#r "nuget:pi-top"
+#r "nuget:pi-top.FoundationKit"
 #r "nuget:Microsoft.Azure.CognitiveServices.Vision.ComputerVision"
 
 using System.IO;
@@ -24,9 +24,9 @@ using BarcodeScanner.Spoonacular;
 using BarcodeScanner.CognitiveComputerVision;
 using Newtonsoft.Json;
 using PiTop;
-using PiTopMakerArchitecture.Foundation;
-using PiTopMakerArchitecture.Foundation.Components;
-using PiTopMakerArchitecture.Foundation.Sensors;
+using PiTop.MakerArchitecture.Foundation;
+using PiTop.MakerArchitecture.Foundation.Components;
+using PiTop.MakerArchitecture.Foundation.Sensors;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using SixLabors.ImageSharp;
@@ -64,7 +64,7 @@ You should have the following connections:
 #!csharp
 
 #!pi-top
-var module = PiTopModule.Instance;
+var board = PiTop4Board.Instance;
 var plate = module.GetOrCreatePlate<FoundationPlate>();
 
 var greenLed = plate.GetOrCreateLed(DigitalPort.D0, Color.Red);
@@ -77,6 +77,11 @@ var cameraTrigger = plate.GetOrCreateButton(DigitalPort.D4);
 
 var amazingCamera = new LegoCamera(cameraTrigger, new DirectoryInfo(@"/home/pi/dev/interactivehackathon/data"));
 amazingCamera.Reload();
+
+#!csharp
+
+#!pi-top
+plate
 
 #!markdown
 
@@ -157,7 +162,7 @@ To see what's on the screen, simply run:
 #!csharp
 
 #!pi-top
-module.Display
+board.Display
 
 #!markdown
 

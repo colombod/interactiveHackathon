@@ -27,26 +27,26 @@ namespace BarcodeScanner
         private readonly Display _display;
         private T _data;
 
-        public Wizard(PiTopModule module, IWizardStep<T>[] steps)
+        public Wizard(PiTop4Board board, IWizardStep<T>[] steps)
         {
             _steps = steps;
-            _display = module.Display;
+            _display = board.Display;
 
-            module.UpButton.PressedChanged += (sender, pressed) => {
+            board.UpButton.PressedChanged += (sender, pressed) => {
                 if (pressed)
                 {
                     steps[_currentStep].Up();
                 }
             };
 
-            module.DownButton.PressedChanged += (sender, pressed) => {
+            board.DownButton.PressedChanged += (sender, pressed) => {
                 if (pressed)
                 {
                     steps[_currentStep].Down();
                 }
             };
 
-            module.SelectButton.PressedChanged += (sender, pressed) => {
+            board.SelectButton.PressedChanged += (sender, pressed) => {
                 steps[_currentStep].Confirm(_data);
                 var nextStep = _currentStep + 1;
                 if (nextStep < steps.Length)
@@ -67,7 +67,7 @@ namespace BarcodeScanner
                 }
             };
 
-            module.CancelButton.PressedChanged += (sender, pressed) => {
+            board.CancelButton.PressedChanged += (sender, pressed) => {
                 _display.Draw((context, cr) => {
                     context.Clear(Color.Black);
                     var rect = TextMeasurer.Measure("Cancelled.", new RendererOptions(_font));

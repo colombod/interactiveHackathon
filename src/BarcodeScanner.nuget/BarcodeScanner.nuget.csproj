@@ -21,7 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="piTop.Camera" Version="1.0.134" />
+    <PackageReference Include="pi-top" Version="1.0.225" />
+    <PackageReference Include="pi-top.Camera" Version="1.0.225" />
+    <PackageReference Include="pi-top.MakerArchitecture.FoundationKit" Version="1.0.225" />
     <PackageReference Include="ZXing.Net" Version="0.16.5" />
   </ItemGroup>
 
