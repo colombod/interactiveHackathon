@@ -1,5 +1,6 @@
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
+
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace BarcodeScanner.CognitiveComputerVision
 
         public async Task<ImageAnalysis> Classify(string fileName)
         {
-            List<VisualFeatureTypes> features = new List<VisualFeatureTypes>()
+            var features = new List<VisualFeatureTypes?>()
                 {
                     VisualFeatureTypes.Categories,
                     VisualFeatureTypes.Description,

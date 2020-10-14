@@ -14,13 +14,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.CognitiveServices.Vision.ComputerVision" Version="5.0.0" />
-    <PackageReference Include="pi-top" Version="1.0.225" />
-    <PackageReference Include="pi-top.Camera" Version="1.0.225" />
-    <PackageReference Include="pi-top.MakerArchitecture.FoundationKit" Version="1.0.225" />
+    <PackageReference Include="Microsoft.Azure.CognitiveServices.Vision.ComputerVision" Version="6.0.0" />
+    <PackageReference Include="pi-top" Version="1.0.228" />
+    <PackageReference Include="pi-top.Camera" Version="1.0.228" />
+    <PackageReference Include="pi-top.MakerArchitecture.FoundationKit" Version="1.0.228" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0010" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="ZXing.Net" Version="0.16.5" />
+    <PackageReference Include="ZXing.Net" Version="0.16.6" />
   </ItemGroup>
 
 </Project>
