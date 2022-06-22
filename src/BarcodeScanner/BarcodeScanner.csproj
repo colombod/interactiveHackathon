@@ -19,7 +19,7 @@
     <PackageReference Include="pi-top.Camera" Version="1.0.228" />
     <PackageReference Include="pi-top.MakerArchitecture.FoundationKit" Version="1.0.228" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0010" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="ZXing.Net" Version="0.16.6" />
   </ItemGroup>
 
